@@ -1,8 +1,19 @@
 org 0x7C00
 use16
 
-mov si, hello
-call printfunc
+macro print msg {
+if ~ msg eq si
+	push si
+	mov si, msg
+end if
+	call printfunc
+if ~ msg eq si
+	pop si
+end if
+}
+
+start:
+	print hello
 
 forever:
     jmp forever
@@ -11,7 +22,7 @@ forever:
 ; mov si, STR_ADDR
 ; call printfunc
 printfunc:
-    lodsb                   ; loads [si] into al then (since DF = 0) si++
+    lodsb                   ; loads [si] into al then (since DF = 0) si++#000000#000000
     or al, al               ; if al == 0
     jz .printfunc_end
     mov ah, byte 0Eh        ; setup the INT10,E interrupt

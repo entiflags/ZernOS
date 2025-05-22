@@ -1,6 +1,27 @@
 org 0x7C00
 use16
 
+; LBA Packet struct
+; Offset  Size          Description
+; 0       1             size of packet struct (16 bytes)
+; 1       1             always 0
+; 2       2             number of sectors to transfer (max 127 on some BIOSes)
+; 4       4             transfer buffer (16 bit segment:16 bit offset) (see note #1)
+; 8       4             lower 32-bits of 48-bit starting LBA
+; 12      4             upper 16-bits of r8-bit starting LBA
+lba_packet equ 07E00h
+virtual at lba_packet
+lba_packet.size         : dw            ?
+lba_packet.count        : dw            ?
+lba_packet.offset       : dw            ?
+lba_packet.segment      : dw            ?
+lba_packet.sector0      : dw            ?
+lba_packet.sector1      : dw            ?
+lba_packet.sector2      : dw            ?
+lba_packet.sector3      : dw            ?
+end virtual
+
+
 macro print msg {
 if ~ msg eq si
 	push si
@@ -31,15 +52,9 @@ end if
 	cmp dl, byte 080h
 	jl .not_hdd
 .is_hdd:
-;AH		41h = function number for extensions check[8]
-;DL  	drive index (e.g. 1st HDD = 80h)
-;BX		55AAh	
 	mov ah, byte 41h
 	mov bx, word 55AAh
 	int 13h
-;CF 	Set On Not Present, Clear If Present
-;BX		55AAh
-;CX		bit1: Device Access using the packet structure
 	jc .not_lba
 	cmp bx, 0AA55h
 	jne .not_lba
@@ -54,8 +69,36 @@ end if
 	jmp panicfunc
 
 .lba_ok:
+    mov word [lba_packet.size], 16
+    mov word [lba_packet.count], 1      ; read 1 sector for now, needs to change when i get 2nd stage
+    mov word [lba_packet.segment], 80h  ; 0x80:0x00 -> 0x800
+    mov word [lba_packet.offset], 0
+    mov word [lba_packet.sector0], 0    ; dword (lower 32-bits of the sector num) [sector0][sector1]
+    mov word [lba_packet.sector1], 2
+    mov word [lba_packet.sector2], 0
+    mov word [lba_packet.sector3], 0
 
+;results
+;CF     Set On Error, Clear If No Error
+;AH     Return Code
+    mov ah, 42h
+    mov si, lba_packet
+    int 13h
+    jnc .read_success
+    mov si, sector_read_error
+    jmp panicfunc
 
+.read_success:
+    mov bx, [magic_bytes]
+    mov cx, word [800h]
+    cmp cx, bx
+    jne .bad_magic
+    mov ax, 802h
+    jmp ax
+
+.bad_magic:
+    mov si, invalid_magic
+    jmp panicfunc
 
 forever:
     jmp forever
@@ -86,12 +129,15 @@ printfunc:
     ret
 
 ; variables
-boot_drive			db 0
+boot_drive: 		db 0
+magic_bytes:        db 0F4h, 1Ch    ; 0xF41C
 
 ; error messages
 panic_prefix:		db "BOOT PANIC: ",0
 lba_not_found:      db "Hard drive doesnt support LBA packet struct",0
 not_hdd:            db "Not a valid harddrive",0
+sector_read_error:  db "Couldn't read sector from drive",0
+invalid_magic:      db "Sector doesnt start with the expected magic bytes",0
 
 ; padding and boot signature
 pad:            	db 510 - ($ - $$) dup 0

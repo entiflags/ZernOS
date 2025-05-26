@@ -29,13 +29,14 @@ Moved to  projects page
 ###  Extended
 
 - [ ] Usable Desktop
-- [ ] Libs
-- [ ] Users 
-- [ ] Shell
-- [ ] 64 Bit
 - [ ] Applications
+- [ ] Shell
+- [ ] Libs
+- [ ] POSIX
+- [ ] Game Ports (DOOM etc..)
+- [ ] Users 
+- [ ] 64 Bit
 - [ ] Game Engine
 - [ ] Web Browser
-- [ ] Game Ports (DOOM etc..)
 - [ ] M++
-- [ ] POSIX
+- [ ] VNC

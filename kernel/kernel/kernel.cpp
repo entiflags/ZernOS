@@ -33,6 +33,6 @@ void kernel_main(multiboot_info_t* mbi, uint32_t magic)
 
 	kprint("Hello from the kernel!\n");
 
-	asm volatile("int $14");
+	//asm volatile("int $14");
 
 }

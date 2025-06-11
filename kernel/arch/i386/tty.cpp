@@ -48,7 +48,7 @@ void terminal_initialize()
 	}
 	terminal_row = 0;
 	terminal_col = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+	terminal_color = vga_entry_color(VGA_COLOR_GREEN , VGA_COLOR_BLACK);
 	terminal_buffer = VGA_MEMORY;
 	terminal_clear();
 

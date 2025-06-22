@@ -22,12 +22,20 @@ multiboot_info_t* s_multiboot_info;
 void on_key_press(Keyboard::Key key, uint8_t modifiers, bool pressed)
 {
 	if (pressed)
-	{	
-		char ascii = Keyboard::key_to_ascii(key, modifiers);
-		if (ascii)
-			kprint("{}", ascii);
+	{
+		if (key == Keyboard::Key::Backspace)
+		{
+			kprint("\b \b");
+		}
+		else
+		{
+			char ascii = Keyboard::key_to_ascii(key, modifiers);
+			if (ascii)
+				kprint("{}", ascii);
+		}
 	}
 }
+
 
 extern "C"
 void kernel_main(multiboot_info_t* mbi, uint32_t magic)
@@ -37,9 +45,6 @@ void kernel_main(multiboot_info_t* mbi, uint32_t magic)
 	s_multiboot_info = mbi;
 	
 	if (magic != 0x2BADB002)
-		return;
-
-	if (mbi->framebuffer.type != 2)
 		return;
 	
 	TTY::initialize();
@@ -56,15 +61,7 @@ void kernel_main(multiboot_info_t* mbi, uint32_t magic)
 
 	ENABLE_INTERRUPTS();
 	kprintln("Hello from the kernel!");
-	
-	dprintln("Hello from serial com1!");
-	
-	int** idk = new int*[10];
-	for (int i = 0; i < 10; i++)
-		idk[i] = new int;
-	
-	kprint("{.2}\n", -12.123f);
-	kprint("0x{.H}", 0xcafebabe);
+	kprint("HHHHHHHHHHHHHHHHHHHHHHHHHHHHH\e[20D.\e[3K");
 	
 	for (;;)
 	{

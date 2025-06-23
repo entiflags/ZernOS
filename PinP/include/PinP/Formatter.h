@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-namespace Formatter
+namespace PinP::Formatter
 {
 	struct ValueFormat;
 

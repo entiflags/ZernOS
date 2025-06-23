@@ -1,9 +1,9 @@
 #pragma once
 
-#include <kernel/Formatter.h>
+#include <PinP/Formatter.h>
 
-#define dprint		Formatter::print<Serial::serial_putc>
-#define dprintln	Formatter::println<Serial::serial_putc>
+#define dprint		PinP::Formatter::print<Serial::serial_putc>
+#define dprintln	PinP::Formatter::println<Serial::serial_putc>
 
 namespace Serial
 {

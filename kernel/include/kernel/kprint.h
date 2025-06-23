@@ -1,7 +1,7 @@
 #pragma once
 
-#include <kernel/Formatter.h>
+#include <PinP/Formatter.h>
 #include <kernel/tty.h>
 
-#define kprint		Formatter::print<TTY::putchar>
-#define kprintln 	Formatter::println<TTY::putchar>
+#define kprint		PinP::Formatter::print<TTY::putchar>
+#define kprintln 	PinP::Formatter::println<TTY::putchar>

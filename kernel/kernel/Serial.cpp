@@ -21,10 +21,8 @@ namespace Serial
 		IO::outb(COM1 + 0, 0xAE);
 		
 		//check if serial is faulty
-		if(IO::inb(COM1 + 0) != 0xAE) {
-			kprint("Could not initialize COM1 serial port\n");
+		if(IO::inb(COM1 + 0) != 0xAE)
 			return;
-		}
 		
 		IO::outb(COM1 + 4, 0x0F);
 		s_initialized = true;

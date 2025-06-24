@@ -6,6 +6,7 @@
 #include <kernel/panic.h>
 #include <kernel/PIC.h>
 #include <kernel/PIT.h>
+#include <kernel/RTC.h>
 #include <kernel/tty.h>
 #include <kernel/Serial.h>
 #include <kernel/kprint.h>
@@ -60,8 +61,11 @@ void kernel_main(multiboot_info_t* mbi, uint32_t magic)
 	Keyboard::initialize(on_key_press);
 
 	ENABLE_INTERRUPTS();
+
+	auto time = RTC::GetCurrentTime();
+	kprintln("Today is {2}:{2}:{2} {2}.{2}.{4}", time.hour, time.minute, time.second, time.day, time.month, time.year);
+
 	kprintln("Hello from the kernel!");
-	kprint("HHHHHHHHHHHHHHHHHHHHHHHHHHHHH\e[20D.\e[3K");
 	
 	for (;;)
 	{

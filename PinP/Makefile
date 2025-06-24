@@ -13,12 +13,12 @@ EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
  
-CFLAGS:=$(CFLAGS) -D__is_ban -Iinclude -ffreestanding -Wall -Wextra
+CFLAGS:=$(CFLAGS) -D__is_pinp -Iinclude -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS)
 LIBK_CFLAGS:=$(CFLAGS) -D__is_bank
 LIBK_CPPFLAGS:=$(CPPFLAGS)
- 
-ARCHDIR=arch/$(HOSTARCH)
+
+ARCHDIR=arch/i386
  
 include $(ARCHDIR)/make.config
  
@@ -80,7 +80,7 @@ install-headers:
  
 install-libs: $(BINARIES)
 	mkdir -p $(DESTDIR)$(LIBDIR)
-	cp $(BUILDDIR)/$(BINARIES) $(DESTDIR)$(LIBDIR)
+	cp $(BINARIES) $(DESTDIR)$(LIBDIR)
  
 -include $(OBJS:.o=.d)
 -include $(LIBK_OBJS:.o=.d)

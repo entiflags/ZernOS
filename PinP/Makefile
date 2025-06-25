@@ -15,7 +15,7 @@ LIBDIR?=$(EXEC_PREFIX)/lib
  
 CFLAGS:=$(CFLAGS) -D__is_pinp -Iinclude -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS)
-LIBK_CFLAGS:=$(CFLAGS) -D__is_bank
+LIBK_CFLAGS:=$(CFLAGS) -D__is_kernel
 LIBK_CPPFLAGS:=$(CPPFLAGS)
 
 ARCHDIR=arch/i386
@@ -41,17 +41,17 @@ $(HOSTEDOBJS) \
  
 BANK_OBJS=$(FREEOBJS:.o=.bank.o)
  
-BINARIES=$(BUILDDIR)/bank.a
+BINARIES=$(BUILDDIR)/libbank.a
  
 .PHONY: all always clean install install-headers install-libs
 .SUFFIXES: .o .bank.o .cpp .S
  
 all: $(BINARIES)
 
-pinp.a: always $(OBJS)
+libpinp.a: always $(OBJS)
 	cd $(BUILDDIR) && $(AR) rcs $@ $(OBJS)
  
-bank.a: always $(LIBK_OBJS)
+libbank.a: always $(LIBK_OBJS)
 	cd $(BUILDDIR) && $(AR) rcs $@ $(LIBK_OBJS)
  
 .cpp.o:

@@ -30,6 +30,11 @@ namespace PIT
 	{
 		PIT::s_system_time++;
 	}
+
+	uint64_t ms_since_boot()
+	{
+		return s_system_time;
+	}
 	
 	void initialize()
 	{
